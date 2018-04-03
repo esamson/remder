@@ -97,7 +97,6 @@ object Main extends JFXApp with StrictLogging {
 
     onCloseRequest = (_: WindowEvent) => {
       debounceExecutor.shutdown()
-      watcher.stop()
       Await.result(system.terminate(), Duration.Inf)
       Platform.exit()
     }
