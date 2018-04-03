@@ -18,6 +18,8 @@ object Dependencies {
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
 
+  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2018.2"
+
   val scalaFx = "org.scalafx" %% "scalafx" % "8.0.144-R12"
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4"
 
@@ -28,6 +30,7 @@ object Dependencies {
       betterFiles,
       commonmark,
       logbackClassic,
+      plantuml,
       scalaFx,
       scalaLogging,
       scalaTest % Test
