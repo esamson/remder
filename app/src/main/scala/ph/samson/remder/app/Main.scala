@@ -11,10 +11,12 @@ import javafx.concurrent.Worker
 import javafx.scene.web.WebErrorEvent
 import javafx.stage.WindowEvent
 import ph.samson.remder.app.Presenter.Probe
-import ph.samson.remder.app.Renderer.DoRender
+import ph.samson.remder.app.Renderer.{ToViewer, ToBrowser}
+import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
 import scalafx.scene.Scene
+import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{BorderPane, Priority}
 import scalafx.scene.paint.Color.Black
 import scalafx.scene.web.WebView
@@ -52,7 +54,7 @@ object Main extends JFXApp with StrictLogging {
   private val debounceExecutor = Executors.newSingleThreadScheduledExecutor()
   private def requestRender() = {
     debounceExecutor.schedule(new Runnable {
-      override def run(): Unit = renderer ! DoRender(markdownFile)
+      override def run(): Unit = renderer ! ToViewer(markdownFile)
     }, 100, MILLISECONDS)
   }
   private var sf: ScheduledFuture[_] = requestRender()
@@ -99,6 +101,13 @@ object Main extends JFXApp with StrictLogging {
       debounceExecutor.shutdown()
       Await.result(system.terminate(), Duration.Inf)
       Platform.exit()
+    }
+
+    filterEvent(KeyEvent.KeyTyped) { (ke: KeyEvent) =>
+      if (ke.character == "b") {
+        ke.consume()
+        renderer ! ToBrowser(markdownFile)
+      }
     }
   }
 }

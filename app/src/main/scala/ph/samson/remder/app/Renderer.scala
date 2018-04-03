@@ -1,5 +1,6 @@
 package ph.samson.remder.app
 
+import java.awt.Desktop
 import java.io.ByteArrayOutputStream
 import java.util
 
@@ -16,9 +17,9 @@ import org.commonmark.renderer.html.{
   HtmlRenderer
 }
 import ph.samson.remder.app.Presenter.Present
-import ph.samson.remder.app.Renderer.{DoRender, PlantUmlRenderer}
 
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
+  import Renderer._
 
   private val parser = Parser.builder().build()
   private val renderer = HtmlRenderer
@@ -28,21 +29,27 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
     )
     .build()
 
-  def doRender(file: File): Unit = {
-    log.debug(s"doRender($file)")
-    val document = file.fileReader(parser.parseReader)
-    val output = renderer.render(document)
-    presenter ! Present(output)
-  }
-
   override def receive: Receive = {
-    case DoRender(file) => doRender(file)
+    case ToViewer(markdown) =>
+      presenter ! Present(
+        renderer.render(markdown.fileReader(parser.parseReader)))
+    case ToBrowser(markdown) =>
+      val content = markdown.contentAsString
+      val hash = content.hashCode
+      val target = OutDir / s"remder-$hash.html"
+      if (target.notExists) {
+        target.writeText(renderer.render(parser.parse(content)))
+      }
+      Desktop.getDesktop.browse(target.uri)
   }
 }
 
 object Renderer {
+  val OutDir: File =
+    sys.env.get("REMDER_OUTDIR").map(File(_)).getOrElse(File.temp)
 
-  case class DoRender(markdown: File)
+  case class ToViewer(markdown: File)
+  case class ToBrowser(markdown: File)
 
   def props(presenter: ActorRef): Props = Props(new Renderer(presenter))
 
@@ -60,7 +67,7 @@ object Renderer {
       case fcb: FencedCodeBlock if NodeTypes.contains(fcb.getInfo) =>
         val nodeType = fcb.getInfo
         val source = fcb.getLiteral
-        val hash = source.hashCode.toString
+        val hash = source.hashCode
         val target = OutDir / s"$hash.png"
         val targetDesc = OutDir / s"$hash.desc"
         val (description, bytes) = if (target.isReadable) {
@@ -92,7 +99,5 @@ object Renderer {
 
   object PlantUmlRenderer {
     val NodeTypes = Set("uml", "salt", "ditaa", "dot", "jcckit")
-    val OutDir: File =
-      sys.env.get("REMDER_OUTDIR").map(File(_)).getOrElse(File.temp)
   }
 }
