@@ -22,12 +22,12 @@ scmInfo in ThisBuild := Some(
   )
 )
 
-pgpPublicRing in ThisBuild := file("./travis/pubring.asc")
-pgpSecretRing in ThisBuild := file("./travis/secring.asc")
 releaseEarlyWith in Global := SonatypePublisher
 
 // Root project
 name := "remder"
+pgpPublicRing := file("./travis/pubring.asc")
+pgpSecretRing := file("./travis/secring.asc")
 
 lazy val app = subproject("remder-app", file("app"))
   .dependsOn(jvmCoupling)
