@@ -1,13 +1,13 @@
 import Dependencies._
 
 // Global settings
-organization in ThisBuild := "ph.samson"
+organization in ThisBuild := "ph.samson.remder"
 scalaVersion in ThisBuild := "2.12.5"
 
 // Root project
 name := "remder"
 
-lazy val app = subproject("app")
+lazy val app = subproject("remder-app", file("app"))
   .dependsOn(jvmCoupling)
   .settings(
     libraryDependencies ++= appDeps.value,
@@ -41,7 +41,9 @@ lazy val coupling = crossProject
 lazy val jvmCoupling = coupling.jvm
 lazy val jsCoupling = coupling.js
 
-def subproject(name: String) = Project(name, file(name)).settings(baseSettings)
+def subproject(name: String, dir: File): Project =
+  Project(name, dir).settings(baseSettings)
+def subproject(name: String): Project = subproject(name, file(name))
 
 lazy val baseSettings = Seq(
   // https://tpolecat.github.io/2017/04/25/scalac-flags.html
