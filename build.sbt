@@ -4,6 +4,28 @@ import Dependencies._
 organization in ThisBuild := "ph.samson.remder"
 scalaVersion in ThisBuild := "2.12.5"
 
+licenses in ThisBuild := Seq(
+  "MIT" -> url("http://opensource.org/licenses/mit-license.php"))
+homepage in ThisBuild := Some(url("https://github.com/esamson/remder"))
+developers in ThisBuild := List(
+  Developer(
+    id = "esamson",
+    name = "Edward Samson",
+    email = "edward@samson.ph",
+    url = url("https://edward.samson.ph")
+  )
+)
+scmInfo in ThisBuild := Some(
+  ScmInfo(
+    url("https://github.com/esamson/remder"),
+    "scm:git:git@github.com:esamson/remder.git"
+  )
+)
+
+pgpPublicRing in ThisBuild := file("./travis/pubring.asc")
+pgpSecretRing in ThisBuild := file("./travis/secring.asc")
+releaseEarlyWith in Global := SonatypePublisher
+
 // Root project
 name := "remder"
 
