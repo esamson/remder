@@ -13,9 +13,15 @@ lazy val app = subproject("remder-app", file("app"))
     libraryDependencies ++= appDeps.value,
     crossLibs(Compile),
     resources in Compile += (fullOptJS in probe in Compile).value.data,
-    fork in run := true
+    fork in run := true,
+    javaOptions in run ++= devRunOpts,
+    javaOptions in reStart ++= devRunOpts
   )
   .enablePlugins(JavaAppPackaging)
+
+lazy val devRunOpts = Seq(
+  "-DREMDER_LOG=debug"
+)
 
 lazy val probe = subproject("probe")
   .enablePlugins(ScalaJSPlugin)
