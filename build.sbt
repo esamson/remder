@@ -15,6 +15,7 @@ lazy val app = subproject("remder-app", file("app"))
     resources in Compile += (fullOptJS in probe in Compile).value.data,
     fork in run := true
   )
+  .enablePlugins(JavaAppPackaging)
 
 lazy val probe = subproject("probe")
   .enablePlugins(ScalaJSPlugin)
