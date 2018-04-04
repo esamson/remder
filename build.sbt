@@ -28,6 +28,7 @@ releaseEarlyWith in Global := SonatypePublisher
 name := "remder"
 pgpPublicRing := file("./travis/pubring.asc")
 pgpSecretRing := file("./travis/secring.asc")
+sonatypeProfileName := "ph.samson"
 
 lazy val app = subproject("remder-app", file("app"))
   .dependsOn(jvmCoupling)
