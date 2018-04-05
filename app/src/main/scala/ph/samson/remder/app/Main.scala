@@ -6,7 +6,6 @@ import java.util.concurrent.{Executors, ScheduledFuture}
 
 import akka.actor.ActorSystem
 import better.files.{File, FileMonitor}
-import com.jcabi.manifests.Manifests
 import com.typesafe.scalalogging.StrictLogging
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.concurrent.Worker
@@ -27,8 +26,6 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 
 object Main extends JFXApp with StrictLogging {
-
-  logger.debug(s"remder ${Manifests.read("Implementation-Version")}")
 
   private val markdownFile = {
     val f = parameters.unnamed.headOption.map(File(_))
@@ -106,7 +103,7 @@ object Main extends JFXApp with StrictLogging {
     })
 
   stage = new PrimaryStage {
-    title = "Remder"
+    title = s"Remder ${Version.Version}"
     width = 1100
     height = 700
     scene = new Scene {
