@@ -24,6 +24,7 @@ import scalafx.scene.web.WebView
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
+import scala.util.control.NonFatal
 
 object Main extends JFXApp with StrictLogging {
 
@@ -42,7 +43,11 @@ object Main extends JFXApp with StrictLogging {
   })
 
   if (markdownFile.name.endsWith(".tmp.md")) {
-    Desktop.getDesktop.edit(markdownFile.toJava)
+    try {
+      Desktop.getDesktop.edit(markdownFile.toJava)
+    } catch {
+      case NonFatal(ex) => logger.debug(s"Can't open $markdownFile editor", ex)
+    }
   }
 
   private val browser = new WebView {
