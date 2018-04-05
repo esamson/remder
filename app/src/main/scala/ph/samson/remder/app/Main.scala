@@ -51,20 +51,33 @@ object Main extends JFXApp with StrictLogging {
   private val presenter = system.actorOf(Presenter.props(engine))
   private val renderer = system.actorOf(Renderer.props(presenter))
 
-  private val debounceExecutor = Executors.newSingleThreadScheduledExecutor()
+  private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
   private def requestRender() = {
-    debounceExecutor.schedule(new Runnable {
+    scheduledExecutor.schedule(new Runnable {
       override def run(): Unit = renderer ! ToViewer(markdownFile)
     }, 100, MILLISECONDS)
   }
   private var sf: ScheduledFuture[_] = requestRender()
-  private val watcher = new FileMonitor(markdownFile, recursive = false) {
-    override def onModify(file: File, count: Int): Unit = {
-      sf.cancel(false)
-      sf = requestRender()
+
+  if (sys.props("os.name") == "Mac OS X") {
+    // WatchService is slow on macOS - use polling
+    var latest = markdownFile.lastModifiedTime
+    scheduledExecutor.scheduleWithFixedDelay(() => {
+      val now = markdownFile.lastModifiedTime
+      if (now.isAfter(latest)) {
+        latest = now
+        sf = requestRender()
+      }
+    }, 400, 400, MILLISECONDS)
+  } else {
+    val watcher = new FileMonitor(markdownFile, recursive = false) {
+      override def onModify(file: File, count: Int): Unit = {
+        sf.cancel(false)
+        sf = requestRender()
+      }
     }
+    watcher.start()(ExecutionContext.global)
   }
-  watcher.start()(ExecutionContext.global)
 
   engine.onError = (event: WebErrorEvent) => {
     logger.error(s"onError: $event")
@@ -98,7 +111,7 @@ object Main extends JFXApp with StrictLogging {
     }
 
     onCloseRequest = (_: WindowEvent) => {
-      debounceExecutor.shutdown()
+      scheduledExecutor.shutdown()
       Await.result(system.terminate(), Duration.Inf)
       Platform.exit()
     }
