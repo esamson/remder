@@ -27,6 +27,6 @@ object Version {
         attributes.getValue(IMPLEMENTATION_TITLE) == "remder-app"
     } yield attributes.getValue(IMPLEMENTATION_VERSION)
 
-    versions.toList.head
+    versions.toList.headOption.getOrElse("(dev)")
   }
 }

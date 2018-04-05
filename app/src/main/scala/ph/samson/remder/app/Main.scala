@@ -103,7 +103,7 @@ object Main extends JFXApp with StrictLogging {
     })
 
   stage = new PrimaryStage {
-    title = s"Remder ${Version.Version}"
+    title = s"Remder ${Version.Version}: $markdownFile"
     width = 1100
     height = 700
     scene = new Scene {
