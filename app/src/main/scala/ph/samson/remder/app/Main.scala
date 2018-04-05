@@ -5,13 +5,14 @@ import java.util.concurrent.{Executors, ScheduledFuture}
 
 import akka.actor.ActorSystem
 import better.files.{File, FileMonitor}
+import com.jcabi.manifests.Manifests
 import com.typesafe.scalalogging.StrictLogging
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.concurrent.Worker
 import javafx.scene.web.WebErrorEvent
 import javafx.stage.WindowEvent
 import ph.samson.remder.app.Presenter.Probe
-import ph.samson.remder.app.Renderer.{ToViewer, ToBrowser}
+import ph.samson.remder.app.Renderer.{ToBrowser, ToViewer}
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
@@ -25,6 +26,8 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.Duration
 
 object Main extends JFXApp with StrictLogging {
+
+  logger.debug(s"remder ${Manifests.read("Implementation-Version")}")
 
   private val markdownFile = {
     val f = parameters.unnamed.headOption.map(File(_))
