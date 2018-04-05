@@ -1,5 +1,6 @@
 package ph.samson.remder.app
 
+import java.awt.Desktop
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.{Executors, ScheduledFuture}
 
@@ -22,8 +23,8 @@ import scalafx.scene.layout.{BorderPane, Priority}
 import scalafx.scene.paint.Color.Black
 import scalafx.scene.web.WebView
 
-import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
 
 object Main extends JFXApp with StrictLogging {
 
@@ -42,6 +43,10 @@ object Main extends JFXApp with StrictLogging {
       markdownFile.delete()
     }
   })
+
+  if (markdownFile.name.endsWith(".tmp.md")) {
+    Desktop.getDesktop.edit(markdownFile.toJava)
+  }
 
   private val browser = new WebView {
     hgrow = Priority.Always
