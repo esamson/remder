@@ -18,6 +18,8 @@ import org.commonmark.renderer.html.{
 }
 import ph.samson.remder.app.Presenter.Present
 
+import scala.io.Source
+
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   import Renderer._
 
@@ -29,16 +31,32 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
     )
     .build()
 
+  private def styled(title: String, htmlBody: String) = {
+    s"""|<html>
+        |  <head>
+        |    <title>$title</title>
+        |    <style>$DefaultCss</style>
+        |  </head>
+        |  <body>
+        |    $htmlBody
+        |  </body>
+        |</html>
+        |""".stripMargin
+  }
+
   override def receive: Receive = {
     case ToViewer(markdown) =>
       presenter ! Present(
-        renderer.render(markdown.fileReader(parser.parseReader)))
+        styled(markdown.nameWithoutExtension,
+               renderer.render(markdown.fileReader(parser.parseReader))))
     case ToBrowser(markdown) =>
       val content = markdown.contentAsString
       val hash = content.hashCode
       val target = OutDir / s"remder-$hash.html"
       if (target.notExists) {
-        target.writeText(renderer.render(parser.parse(content)))
+        target.writeText(
+          styled(markdown.nameWithoutExtension,
+                 renderer.render(parser.parse(content))))
       }
       Desktop.getDesktop.browse(target.uri)
   }
@@ -47,6 +65,8 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
 object Renderer {
   val OutDir: File =
     sys.env.get("REMDER_OUTDIR").map(File(_)).getOrElse(File.temp)
+
+  val DefaultCss: String = Source.fromResource("default.css").mkString
 
   case class ToViewer(markdown: File)
   case class ToBrowser(markdown: File)
