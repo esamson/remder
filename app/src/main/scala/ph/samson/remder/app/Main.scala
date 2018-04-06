@@ -10,6 +10,7 @@ import com.typesafe.scalalogging.StrictLogging
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.concurrent.Worker
 import javafx.scene.web.WebErrorEvent
+import javafx.scene.web.WebErrorEvent.USER_DATA_DIRECTORY_ALREADY_IN_USE
 import javafx.stage.WindowEvent
 import ph.samson.remder.app.Presenter.Probe
 import ph.samson.remder.app.Renderer.{ToBrowser, ToViewer}
@@ -90,7 +91,11 @@ object Main extends JFXApp with StrictLogging {
   }
 
   engine.onError = (event: WebErrorEvent) => {
-    logger.error(s"onError: $event")
+    if (event.getEventType == USER_DATA_DIRECTORY_ALREADY_IN_USE) {
+      engine.userDataDirectory = File.newTemporaryDirectory().toJava
+    } else {
+      logger.error(s"WebEngine error: ${event.getMessage}", event.getException)
+    }
   }
 
   engine.getLoadWorker
