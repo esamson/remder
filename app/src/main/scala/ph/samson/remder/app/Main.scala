@@ -114,8 +114,6 @@ object Main extends JFXApp with StrictLogging {
 
   stage = new PrimaryStage {
     title = s"Remder ${Version.Version}: $markdownFile"
-    width = 1100
-    height = 700
     scene = new Scene {
       fill = Black
       root = new BorderPane {
@@ -137,5 +135,23 @@ object Main extends JFXApp with StrictLogging {
         renderer ! ToBrowser(markdownFile)
       }
     }
+  }
+
+  for (window <- WindowMemory.load(markdownFile)) {
+    logger.debug(s"loaded $window")
+    stage.x = window.x
+    stage.y = window.y
+    stage.width = window.width
+    stage.height = window.height
+  }
+
+  WindowMemory.gc()
+
+  sys.addShutdownHook {
+    WindowMemory.save(markdownFile,
+                      stage.getX,
+                      stage.getY,
+                      stage.getWidth,
+                      stage.getHeight)
   }
 }
