@@ -32,13 +32,16 @@ object WindowMemory extends StrictLogging {
            x: Double,
            y: Double,
            width: Double,
-           height: Double): Unit = {
+           height: Double,
+           xScroll: Int,
+           yScroll: Int): Unit = {
 
     val serialize = for {
       buffer <- managed(new ByteArrayOutputStream())
       out <- managed(new ObjectOutputStream(buffer))
     } yield {
-      out.writeObject(Window(x, y, width, height, Instant.now()))
+      out.writeObject(
+        Window(x, y, width, height, xScroll, yScroll, Instant.now()))
       out.flush()
       buffer.toByteArray
     }
@@ -122,6 +125,8 @@ object WindowMemory extends StrictLogging {
       y: Double,
       width: Double,
       height: Double,
+      xScroll: Int,
+      yScroll: Int,
       lastSave: Instant
   )
 

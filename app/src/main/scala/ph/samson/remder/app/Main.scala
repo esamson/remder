@@ -6,17 +6,19 @@ import java.util.concurrent.{Executors, ScheduledFuture}
 
 import akka.actor.ActorSystem
 import better.files.{File, FileMonitor}
-import com.typesafe.scalalogging.StrictLogging
+import com.typesafe.scalalogging.{Logger, StrictLogging}
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.concurrent.Worker
 import javafx.scene.web.WebErrorEvent
 import javafx.scene.web.WebErrorEvent.USER_DATA_DIRECTORY_ALREADY_IN_USE
 import javafx.stage.WindowEvent
-import ph.samson.remder.app.Presenter.Probe
+import ph.samson.remder.app.Presenter.Scroll
 import ph.samson.remder.app.Renderer.{ToBrowser, ToViewer}
+import ph.samson.remder.coupling.Uplink
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
+import scalafx.beans.property.IntegerProperty
 import scalafx.scene.Scene
 import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{BorderPane, Priority}
@@ -27,7 +29,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 import scala.util.control.NonFatal
 
-object Main extends JFXApp with StrictLogging {
+object Main extends JFXApp with Uplink with StrictLogging {
 
   private val markdownFile = {
     val f = parameters.unnamed.headOption.map(File(_))
@@ -59,7 +61,7 @@ object Main extends JFXApp with StrictLogging {
   private val engine = browser.engine
 
   private val system: ActorSystem = ActorSystem("remder")
-  private val presenter = system.actorOf(Presenter.props(engine))
+  private val presenter = system.actorOf(Presenter.props(engine, this))
   private val renderer = system.actorOf(Renderer.props(presenter))
 
   private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
@@ -98,20 +100,6 @@ object Main extends JFXApp with StrictLogging {
     }
   }
 
-  engine.getLoadWorker
-    .stateProperty()
-    .addListener(new ChangeListener[Worker.State] {
-      override def changed(observable: ObservableValue[_ <: Worker.State],
-                           oldValue: Worker.State,
-                           newValue: Worker.State): Unit = {
-        newValue match {
-          case Worker.State.SUCCEEDED => presenter ! Probe
-          case Worker.State.FAILED    => logger.error("Loading FAILED")
-          case _                      => // ignore
-        }
-      }
-    })
-
   stage = new PrimaryStage {
     title = s"Remder ${Version.Version}: $markdownFile"
     scene = new Scene {
@@ -137,13 +125,33 @@ object Main extends JFXApp with StrictLogging {
     }
   }
 
+  val xScroll = IntegerProperty(0)
+  val yScroll = IntegerProperty(0)
+
   for (window <- WindowMemory.load(markdownFile)) {
     logger.debug(s"loaded $window")
     stage.x = window.x
     stage.y = window.y
     stage.width = window.width
     stage.height = window.height
+    xScroll() = window.xScroll
+    yScroll() = window.yScroll
   }
+
+  engine.getLoadWorker
+    .stateProperty()
+    .addListener(new ChangeListener[Worker.State] {
+      override def changed(observable: ObservableValue[_ <: Worker.State],
+                           oldValue: Worker.State,
+                           newValue: Worker.State): Unit = {
+        newValue match {
+          case Worker.State.SUCCEEDED =>
+            presenter ! Scroll(xScroll(), yScroll())
+          case Worker.State.FAILED => logger.error("Loading FAILED")
+          case _                   => // ignore
+        }
+      }
+    })
 
   WindowMemory.gc()
 
@@ -152,6 +160,19 @@ object Main extends JFXApp with StrictLogging {
                       stage.getX,
                       stage.getY,
                       stage.getWidth,
-                      stage.getHeight)
+                      stage.getHeight,
+                      xScroll(),
+                      yScroll())
+  }
+
+  val probeLogger = Logger("probe")
+
+  override def debug(msg: String): Unit = probeLogger.debug(msg)
+
+  override def info(msg: String): Unit = probeLogger.info(msg)
+
+  override def scrolled(x: Int, y: Int): Unit = {
+    xScroll() = x
+    yScroll() = y
   }
 }
