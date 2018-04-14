@@ -1,4 +1,5 @@
 import Dependencies._
+import microsites._
 
 // Global settings
 organization in ThisBuild := "ph.samson.remder"
@@ -71,6 +72,63 @@ lazy val coupling = crossProject
 
 lazy val jvmCoupling = coupling.jvm
 lazy val jsCoupling = coupling.js
+
+lazy val docs = subproject("docs")
+  .enablePlugins(MicrositesPlugin)
+  .settings(
+    micrositeName := "Remder",
+    micrositeDescription := "Remder: live markdown preview",
+    micrositeBaseUrl := "/remder",
+    micrositeAuthor := "Edward Samson",
+    micrositeHomepage := "https://esamson.github.io/remder/",
+    micrositeOrganizationHomepage := "https://edward.samson.ph/",
+    micrositeGithubOwner := "esamson",
+    micrositeGithubRepo := "remder",
+    micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
+    micrositePushSiteWith := GitHub4s,
+    micrositeAnalyticsToken := sys.env.getOrElse("ANALYTICS_TOKEN", ""),
+    micrositeExtraMdFiles := Map(
+      file("README.md") -> ExtraMdFileConfig(
+        "index.md",
+        "home",
+        Map(
+          "technologies" ->
+            s"""|
+                | - first: ["ScalaFX", "WebView and desktop GUI."]
+                | - second: ["commonmark-java", "Markdown rendering."]
+                | - third: ["PlantUML", "Diagram rendering."]
+                |""".stripMargin
+        )
+      )
+    ),
+    micrositeFooterText := {
+      for {
+        gitDescribe <- dynverGitDescribeOutput.value
+        default <- micrositeFooterText.value
+      } yield {
+        val versionLink = if (gitDescribe.isDirty()) {
+          "https://github.com/esamson/remder/commits/master"
+        } else if (gitDescribe.isSnapshot()) {
+          s"https://github.com/esamson/remder/commit/${gitDescribe.commitSuffix.sha}"
+        } else {
+          s"https://github.com/esamson/remder/releases/tag/v${version.value}"
+        }
+
+        val versionFooter =
+          s"""<p><a href="$versionLink">Remder ${version.value}</a></p>"""
+
+        val micrositesFooter = if (default.startsWith("<p>")) {
+          default.replace("<p>", """<p style="font-size: 50%">""")
+        } else {
+          default
+        }
+
+        s"""|$versionFooter
+            |$micrositesFooter
+            |""".stripMargin
+      }
+    }
+  )
 
 def subproject(name: String, dir: File): Project =
   Project(name, dir).settings(baseSettings)
