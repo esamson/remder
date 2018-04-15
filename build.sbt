@@ -77,7 +77,7 @@ lazy val docs = subproject("docs")
   .enablePlugins(MicrositesPlugin)
   .settings(
     micrositeName := "Remder",
-    micrositeDescription := "Remder: live markdown preview",
+    micrositeDescription := "Remder: markdown rendered live",
     micrositeBaseUrl := "/remder",
     micrositeAuthor := "Edward Samson",
     micrositeHomepage := "https://esamson.github.io/remder/",
