@@ -1,13 +1,71 @@
-<html><head><title>Remder</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Edward Samson" /><meta name="description" content="Remder: live markdown preview" /><meta name="og:image" content="/remder/img/poster.png" /><meta name="og:title" content="Remder" /><meta name="og:site_name" content="Remder" /><meta name="og:url" content="https://esamson.github.io/remder/" /><meta name="og:type" content="website" /><meta name="og:description" content="Remder: live markdown preview" /><link rel="icon" type="image/png" href="/remder/img/favicon.png" /><meta name="twitter:title" content="Remder" /><meta name="twitter:image" content="https://esamson.github.io/remder/img/poster.png" /><meta name="twitter:description" content="Remder: live markdown preview" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/remder/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/remder/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/remder/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/remder/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/remder/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/remder/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/remder/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/remder/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/remder/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/remder/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/remder/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/remder/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/remder/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/remder/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/remder/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/remder/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/remder/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/remder/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/remder/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/remder/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/remder/highlight/styles/default.css" /><link rel="stylesheet" href="/remder/css/style.css" /><link rel="stylesheet" href="/remder/css/palette.css" /><link rel="stylesheet" href="/remder/css/codemirror.css" /></head><body><header id="site-header"><div class="navbar-wrapper"><div class="container"><div class="row"><div class="col-xs-6"><a href="/remder/" class="brand"><div class="icon-wrapper"><span>Remder</span></div></a></div><div class="col-xs-6"><nav class="text-right"><ul class=""><li><a href="https://github.com/esamson/remder"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li></ul></nav></div></div></div></div><div class="jumbotron"><div class="container"><h1 class="text-center">Remder: live markdown preview</h1><h2></h2><p class="text-center"><a href="https://github.com/esamson/remder" class="btn btn-outline-inverse">View on GitHub</a></p></div></div><div><ul class="horizontalNav">      </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h1 id="remder">Remder</h1>
+<html><head><title>Remder</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Edward Samson" /><meta name="description" content="Remder: markdown rendered live" /><meta name="og:image" content="/remder/img/poster.png" /><meta name="og:title" content="Remder" /><meta name="og:site_name" content="Remder" /><meta name="og:url" content="https://esamson.github.io/remder/" /><meta name="og:type" content="website" /><meta name="og:description" content="Remder: markdown rendered live" /><link rel="icon" type="image/png" href="/remder/img/favicon.png" /><meta name="twitter:title" content="Remder" /><meta name="twitter:image" content="https://esamson.github.io/remder/img/poster.png" /><meta name="twitter:description" content="Remder: markdown rendered live" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="/remder/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/remder/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/remder/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/remder/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/remder/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/remder/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/remder/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/remder/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/remder/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/remder/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/remder/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/remder/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/remder/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/remder/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/remder/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/remder/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/remder/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/remder/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/remder/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/remder/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/remder/highlight/styles/default.css" /><link rel="stylesheet" href="/remder/css/style.css" /><link rel="stylesheet" href="/remder/css/palette.css" /><link rel="stylesheet" href="/remder/css/codemirror.css" /></head><body><header id="site-header"><div class="navbar-wrapper"><div class="container"><div class="row"><div class="col-xs-6"><a href="/remder/" class="brand"><div class="icon-wrapper"><span>Remder</span></div></a></div><div class="col-xs-6"><nav class="text-right"><ul class=""><li><a href="https://github.com/esamson/remder"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li></ul></nav></div></div></div></div><div class="jumbotron"><div class="container"><h1 class="text-center">Remder: markdown rendered live</h1><h2></h2><p class="text-center"><a href="https://github.com/esamson/remder" class="btn btn-outline-inverse">View on GitHub</a></p></div></div><div><ul class="horizontalNav">      </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h1 id="remder">Remder</h1>
 
 <p>Renders a live HTML view of a Markdown file. Bring your own editor.</p>
 
-<p>[<img src="https://esamson.github.io/remder/static/remder-demo.gif" alt="demo" />]</p>
+<p><img src="https://esamson.github.io/remder/static/remder-demo.gif" alt="demo" /></p>
+
+<h2 id="install">Install</h2>
+
+<p><em>Tested on <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java 8</a>.</em></p>
+
+<p>Use <a href="https://github.com/coursier/coursier#generating-bootstrap-launchers">Coursier</a>
+to add the <strong>remder-app</strong> launcher to your <code class="highlighter-rouge">$PATH</code>. For example (assuming
+<code class="highlighter-rouge">~/.local/bin</code> is in your <code class="highlighter-rouge">$PATH</code>):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ coursier bootstrap ph.samson.remder:remder-app_2.12:0.0.7 -o ~/.local/bin/remder-app
+</code></pre>
+</div>
+
+<p>Check out <a href="https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22ph.samson.remder%22%20AND%20a%3A%22remder-app_2.12%22">Maven Central</a>
+for the latest available releases and snapshots.</p>
+
+<p><strong>note:</strong> If you don’t have <strong>coursier</strong>, see <a href="https://github.com/coursier/coursier#command-line">here</a>.</p>
+
+<h2 id="use">Use</h2>
+
+<p>Provide the markdown file as an argument to <strong>remder-app</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ remder-app README.md
+</code></pre>
+</div>
+
+<p>This launches the preview window. Edit with your favorite editor and <strong>remder</strong>
+automatically picks up and renders any changes when you save your edits.</p>
+
+<h3 id="use-with-vim">Use with Vim</h3>
+
+<p>I use <a href="https://github.com/plasticboy/vim-markdown">vim-markdown</a> for my own
+markdown editing needs. In my <code class="highlighter-rouge">~/.vimrc</code> I map <code class="highlighter-rouge">\r</code> to launch <strong>remder-app</strong>.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>autocmd Filetype markdown nmap &lt;leader&gt;r :w \| :silent !remder-app '%' &amp;&lt;CR&gt;
+</code></pre>
+</div>
+
+<h2 id="embedded-diagrams-with-plantuml">Embedded Diagrams with PlantUML</h2>
+
+<p>You can embed <a href="http://plantuml.com/">PlantUML</a> diagrams as a <code class="highlighter-rouge">uml</code> code block.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>```uml
+Alice -&gt; Bob: Authentication Request
+Bob --&gt; Alice: Authentication Response
+
+Alice -&gt; Bob: Another authentication Request
+Alice &lt;-- Bob: another authentication Response
+```
+</code></pre>
+</div>
+
+<p>Sequence diagrams work out of the box but for other diagram types you will
+need to have Graphviz (the <code class="highlighter-rouge">dot</code> command) on your system.
+See <a href="http://plantuml.com/faq-install">PlantUML Installation notes</a>.</p>
 
 <h2 id="view-in-browser">View in Browser</h2>
 
 <p>To view a (static) rendering in your default browser, press <strong><code class="highlighter-rouge">b</code></strong> on your
-keyboard.</p>
+keyboard. There you’ll have all the nice things your browser can do for you
+like printing your document and copy-pasting the rendered HTML into Gmail or
+Google Docs. (Actually, in my testing, copy-pasting rendered HTML from the
+<strong>remder</strong> view works on <em>Mac OS X</em> but not in <em>Fedora</em>).</p>
 
 </div></div></section><section class="technologies"><div class="container"><div class="row">
             <div class="col-md-4"><div class="first-icon-wrapper"></div><h3>ScalaFX</h3><p>WebView and desktop GUI.</p></div>
@@ -15,7 +73,7 @@ keyboard.</p>
             <div class="col-md-4"><div class="second-icon-wrapper"></div><h3>commonmark-java</h3><p>Markdown rendering.</p></div>
           
             <div class="col-md-4"><div class="third-icon-wrapper"></div><h3>PlantUML</h3><p>Diagram rendering.</p></div>
-          </div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Remder is designed and developed by <a href="https://edward.samson.ph/" target="_blank">Edward Samson</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/esamson/remder"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6"><p><a href="https://github.com/esamson/remder/releases/tag/v0.0.6">Remder 0.0.6</a></p>
+          </div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>Remder is designed and developed by <a href="https://edward.samson.ph/" target="_blank">Edward Samson</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/esamson/remder"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6"><p><a href="https://github.com/esamson/remder/releases/tag/v0.0.7">Remder 0.0.7</a></p>
 <p style="font-size: 50%">Website built with <a href="https://47deg.github.io/sbt-microsites/" target="_blank">Sbt-microsites</a> - © 2016 <a href="https://www.47deg.com/" target="_blank">47 Degrees</a></p>
 </div></div></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/remder/highlight/highlight.pack.js"></script><script>hljs.configure({
 languages:['scala','java','bash']

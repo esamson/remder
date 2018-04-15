@@ -1,11 +1,11 @@
 name: Remder
 baseurl: /remder
-description: 'Remder: live markdown preview'
+description: 'Remder: markdown rendered live'
 highlighter: rouge
 docs: true
 collections:
   tut:
     output: true
-version: 0.0.6
+version: 0.0.7
 org: ph.samson.remder
 markdown: kramdown
