@@ -19,7 +19,7 @@ install:
 - gem install sass
 - gem install jekyll -v 3.2.1
 after_success:
-- if [ "$TRAVIS_BRANCH" = 'master' -a $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
+- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION releaseEarly;
   fi
 - if [ "$TRAVIS_BRANCH" = "$TRAVIS_TAG" ]; then sbt ++$TRAVIS_SCALA_VERSION docs/publishMicrosite;
   fi
