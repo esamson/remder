@@ -1,5 +1,7 @@
 # Remder
 
+[![Join the chat at https://gitter.im/remder/Lobby](https://badges.gitter.im/remder/Lobby.svg)](https://gitter.im/remder/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Renders a live HTML view of a Markdown file. Bring your own editor.
 
 ![demo](https://esamson.github.io/remder/static/remder-demo.gif)
