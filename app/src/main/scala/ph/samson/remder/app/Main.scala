@@ -115,6 +115,7 @@ object Main extends JFXApp with Uplink with StrictLogging {
       scheduledExecutor.shutdown()
       Await.result(system.terminate(), Duration.Inf)
       Platform.exit()
+      System.exit(0)
     }
 
     filterEvent(KeyEvent.KeyTyped) { (ke: KeyEvent) =>
