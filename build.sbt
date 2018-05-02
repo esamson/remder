@@ -3,7 +3,7 @@ import microsites._
 
 // Global settings
 organization in ThisBuild := "ph.samson.remder"
-scalaVersion in ThisBuild := "2.12.5"
+scalaVersion in ThisBuild := "2.12.6"
 
 licenses in ThisBuild := Seq(
   "MIT" -> url("http://opensource.org/licenses/mit-license.php"))
