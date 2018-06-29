@@ -14,6 +14,7 @@ object Dependencies {
 
   val commonmarkVersion = "0.11.0"
   val commonmark = "com.atlassian.commonmark" % "commonmark" % commonmarkVersion
+  val commonmarkExtGfmTables = "com.atlassian.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
 
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
@@ -32,6 +33,7 @@ object Dependencies {
       akkaSlf4j,
       betterFiles,
       commonmark,
+      commonmarkExtGfmTables,
       logbackClassic,
       plantuml,
       scalaArm,

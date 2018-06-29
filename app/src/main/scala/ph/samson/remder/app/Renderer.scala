@@ -8,6 +8,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import better.files.File
 import javax.xml.bind.DatatypeConverter
 import net.sourceforge.plantuml.SourceStringReader
+import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.{FencedCodeBlock, Node}
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.NodeRenderer
@@ -18,17 +19,23 @@ import org.commonmark.renderer.html.{
 }
 import ph.samson.remder.app.Presenter.Present
 
+import scala.collection.JavaConverters._
 import scala.io.Source
 
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   import Renderer._
 
-  private val parser = Parser.builder().build()
+  private val extensions = Seq(TablesExtension.create()).asJava
+  private val parser = Parser
+    .builder()
+    .extensions(extensions)
+    .build()
   private val renderer = HtmlRenderer
     .builder()
     .nodeRendererFactory(
       (context: HtmlNodeRendererContext) => new PlantUmlRenderer(context)
     )
+    .extensions(extensions)
     .build()
 
   private def styled(title: String, htmlBody: String) = {
