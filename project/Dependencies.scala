@@ -4,8 +4,8 @@ import sbt.Keys._
 
 object Dependencies {
 
-  val akkaVersion = "2.5.12"
-  val betterFilesVersion = "3.4.0"
+  val akkaVersion = "2.5.15"
+  val betterFilesVersion = "3.6.0"
 
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
   val akkaSlf4j = "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
@@ -17,15 +17,15 @@ object Dependencies {
   val commonmarkExtGfmTables = "com.atlassian.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
 
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
-  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0"
+  val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
-  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2018.9"
+  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2018.10"
 
   val scalaArm = "com.jsuereth" %% "scala-arm" % "2.0"
 
   val scalaFx = "org.scalafx" %% "scalafx" % "8.0.144-R12"
 
-  val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4"
+  val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
 
   val appDeps = Def.setting(
     Seq(
@@ -45,7 +45,7 @@ object Dependencies {
 
   val probeDeps = Def.setting(
     Seq[ModuleID](
-      "org.scala-js" %%% "scalajs-dom" % "0.9.5"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.6"
     )
   )
 
