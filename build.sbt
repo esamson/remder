@@ -1,5 +1,6 @@
 import Dependencies._
 import microsites._
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // Global settings
 organization in ThisBuild := "ph.samson.remder"
@@ -62,7 +63,7 @@ lazy val probe = subproject("probe")
     )
   )
 
-lazy val coupling = crossProject
+lazy val coupling = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
   .in(file("coupling"))
   .settings(
