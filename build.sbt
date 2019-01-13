@@ -32,6 +32,7 @@ pgpPublicRing := file("./travis/pubring.asc")
 pgpSecretRing := file("./travis/secring.asc")
 sonatypeProfileName := "ph.samson"
 aggregate in releaseEarly := false
+publish / skip := true
 
 lazy val app = subproject("remder-app", file("app"))
   .dependsOn(jvmCoupling)
