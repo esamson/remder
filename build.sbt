@@ -44,7 +44,6 @@ lazy val app = subproject("remder-app", file("app"))
     javaOptions in run ++= devRunOpts,
     javaOptions in reStart ++= devRunOpts
   )
-  .enablePlugins(JavaAppPackaging)
 
 lazy val devRunOpts = Seq(
   "-DREMDER_LOG=debug"
