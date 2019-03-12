@@ -19,7 +19,7 @@ object Dependencies {
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 
-  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2019.1"
+  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2019.3"
 
   val scalaArm = "com.jsuereth" %% "scala-arm" % "2.0"
 
