@@ -12,7 +12,7 @@ object Main {
       Uplink.scrolled(window.pageXOffset.toInt, window.pageYOffset.toInt)
     }
     var handle = reportScroll()
-    window.addEventListener[UIEvent]("scroll", _ => {
+    window.addEventListener[UIEvent]("scroll", (_: UIEvent) => {
       timers.clearTimeout(handle)
       handle = reportScroll()
     })
