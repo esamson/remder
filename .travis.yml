@@ -5,6 +5,7 @@ scala:
 script:
 - project/bin/scalafmt --test
 - sbt ++$TRAVIS_SCALA_VERSION test
+dist: trusty
 jdk:
 - oraclejdk8
 before_install:
