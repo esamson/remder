@@ -26,7 +26,7 @@ object WindowMemory extends StrictLogging {
   private val prefs = Preferences.userNodeForPackage(getClass)
 
   def fileKey(markdownFile: File): String =
-    markdownFile.path.toAbsolutePath.toString
+    markdownFile.path.toAbsolutePath.toString.hashCode.toString
 
   def save(markdownFile: File,
            x: Double,
