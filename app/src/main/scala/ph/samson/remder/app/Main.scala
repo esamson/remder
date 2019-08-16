@@ -1,6 +1,7 @@
 package ph.samson.remder.app
 
 import java.awt.Desktop
+import java.time.Instant
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.{Executors, ScheduledFuture}
 
@@ -14,6 +15,7 @@ import javafx.scene.web.WebErrorEvent.USER_DATA_DIRECTORY_ALREADY_IN_USE
 import javafx.stage.WindowEvent
 import ph.samson.remder.app.Presenter.Scroll
 import ph.samson.remder.app.Renderer.{ToBrowser, ToViewer}
+import ph.samson.remder.app.WindowMemory.Window
 import ph.samson.remder.coupling.Uplink
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
@@ -24,6 +26,7 @@ import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{BorderPane, Priority}
 import scalafx.scene.paint.Color.Black
 import scalafx.scene.web.WebView
+import scalafx.stage.Screen
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
@@ -36,8 +39,10 @@ object Main extends JFXApp with Uplink with StrictLogging {
     f.getOrElse(File.newTemporaryFile(suffix = ".tmp.md"))
   }
 
-  require(markdownFile.isRegularFile && markdownFile.isReadable,
-          s"Can't read $markdownFile")
+  require(
+    markdownFile.isRegularFile && markdownFile.isReadable,
+    s"Can't read $markdownFile"
+  )
   logger.info(s"remdering $markdownFile")
   sys.addShutdownHook({
     if (markdownFile.name.endsWith(".tmp.md") && markdownFile.isEmpty) {
@@ -131,10 +136,57 @@ object Main extends JFXApp with Uplink with StrictLogging {
 
   for (window <- WindowMemory.load(markdownFile)) {
     logger.debug(s"loaded $window")
-    stage.x = window.x
-    stage.y = window.y
-    stage.width = window.width
-    stage.height = window.height
+    // Window(40.0,23.0,0.0,22.0,0,0,2019-08-16T02:42:20.341Z)
+    val bounds = Screen.primary.visualBounds
+    logger.debug {
+      val w = Window(
+        bounds.maxX,
+        bounds.maxY,
+        bounds.width,
+        bounds.height,
+        0,
+        0,
+        Instant.now
+      )
+      s"Checking bounds: $w"
+    }
+    val width = if (window.width > 0 && window.width < bounds.width) {
+      window.width
+    } else {
+      bounds.width / 2
+    }
+    val height = if (window.height > 0 && window.height < bounds.height) {
+      window.height
+    } else {
+      bounds.height / 2
+    }
+    val x = if (window.x + width < bounds.maxX) {
+      window.x
+    } else {
+      (bounds.width - width) / 2
+    }
+    val y = if (window.y + height < bounds.maxY) {
+      window.y
+    } else {
+      (bounds.height - height) / 2
+    }
+
+    logger.debug {
+      val w = Window(
+        x,
+        y,
+        width,
+        height,
+        window.xScroll,
+        window.yScroll,
+        window.lastSave
+      )
+      s"Sizing: $w"
+    }
+    stage.x = x
+    stage.y = y
+    stage.width = width
+    stage.height = height
     xScroll() = window.xScroll
     yScroll() = window.yScroll
   }
@@ -142,9 +194,11 @@ object Main extends JFXApp with Uplink with StrictLogging {
   engine.getLoadWorker
     .stateProperty()
     .addListener(new ChangeListener[Worker.State] {
-      override def changed(observable: ObservableValue[_ <: Worker.State],
-                           oldValue: Worker.State,
-                           newValue: Worker.State): Unit = {
+      override def changed(
+          observable: ObservableValue[_ <: Worker.State],
+          oldValue: Worker.State,
+          newValue: Worker.State
+      ): Unit = {
         newValue match {
           case Worker.State.SUCCEEDED =>
             presenter ! Scroll(xScroll(), yScroll())
@@ -157,13 +211,15 @@ object Main extends JFXApp with Uplink with StrictLogging {
   WindowMemory.gc()
 
   sys.addShutdownHook {
-    WindowMemory.save(markdownFile,
-                      stage.getX,
-                      stage.getY,
-                      stage.getWidth,
-                      stage.getHeight,
-                      xScroll(),
-                      yScroll())
+    WindowMemory.save(
+      markdownFile,
+      stage.getX,
+      stage.getY,
+      stage.getWidth,
+      stage.getHeight,
+      xScroll(),
+      yScroll()
+    )
   }
 
   val probeLogger = Logger("probe")
