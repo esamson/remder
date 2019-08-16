@@ -24,7 +24,6 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
 
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   import Renderer._
@@ -142,9 +141,11 @@ object Renderer {
         }
 
         logger.debug(s"waiting for $target")
-        Try(Await.result(rendering, 3.seconds)) match {
-          case Success(_) => logger.debug(s"rendered: $target")
-          case Failure(ex) =>
+        try {
+          Await.result(rendering, 3.seconds)
+          logger.debug(s"rendered: $target")
+        } catch {
+          case ex: Throwable =>
             logger.warn(s"Failed rendering $target", ex)
             default.render(fcb)
         }
