@@ -6,6 +6,7 @@ import java.util
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import better.files.File
+import com.typesafe.scalalogging.StrictLogging
 import javax.xml.bind.DatatypeConverter
 import net.sourceforge.plantuml.SourceStringReader
 import org.commonmark.ext.gfm.tables.TablesExtension
@@ -20,7 +21,10 @@ import org.commonmark.renderer.html.{
 import ph.samson.remder.app.Presenter.Present
 
 import scala.collection.JavaConverters._
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
+import scala.util.{Failure, Success, Try}
 
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   import Renderer._
@@ -54,16 +58,22 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
     case ToViewer(markdown) =>
       presenter ! Present(
-        styled(markdown.nameWithoutExtension,
-               renderer.render(markdown.fileReader(parser.parseReader))))
+        styled(
+          markdown.nameWithoutExtension,
+          renderer.render(markdown.fileReader(parser.parseReader))
+        )
+      )
     case ToBrowser(markdown) =>
       val content = markdown.contentAsString
       val hash = content.hashCode
       val target = OutDir / s"remder-$hash.html"
       if (target.notExists) {
         target.writeText(
-          styled(markdown.nameWithoutExtension,
-                 renderer.render(parser.parse(content))))
+          styled(
+            markdown.nameWithoutExtension,
+            renderer.render(parser.parse(content))
+          )
+        )
       }
       Desktop.getDesktop.browse(target.uri)
   }
@@ -81,8 +91,11 @@ object Renderer {
   def props(presenter: ActorRef): Props = Props(new Renderer(presenter))
 
   class PlantUmlRenderer(context: HtmlNodeRendererContext)
-      extends NodeRenderer {
+      extends NodeRenderer
+      with StrictLogging {
     import PlantUmlRenderer._
+
+    implicit val ec = ExecutionContext.global
 
     private val writer = context.getWriter
     private val default = new CoreHtmlNodeRenderer(context)
@@ -92,34 +105,49 @@ object Renderer {
 
     override def render(node: Node): Unit = node match {
       case fcb: FencedCodeBlock if NodeTypes.contains(fcb.getInfo) =>
+        logger.debug(s"rendering ${fcb.getInfo}")
         val nodeType = fcb.getInfo
         val source = fcb.getLiteral
         val hash = source.hashCode
         val target = OutDir / s"$hash.png"
         val targetDesc = OutDir / s"$hash.desc"
-        val (description, bytes) = if (target.isReadable) {
-          targetDesc.contentAsString -> target.byteArray
-        } else {
-          val os = new ByteArrayOutputStream()
-          val desc =
-            new SourceStringReader(s"@start$nodeType\n$source\n@end$nodeType")
-              .outputImage(os)
-              .getDescription
-          val output = os.toByteArray
-          target.writeByteArray(output)
-          targetDesc.writeText(desc)
-          desc -> output
+
+        val rendering = Future {
+          val (description, bytes) = if (target.isReadable) {
+            logger.debug(s"reusing $target")
+            targetDesc.contentAsString -> target.byteArray
+          } else {
+            logger.debug(s"rendering $target")
+            val os = new ByteArrayOutputStream()
+            val desc =
+              new SourceStringReader(s"@start$nodeType\n$source\n@end$nodeType")
+                .outputImage(os)
+                .getDescription
+            val output = os.toByteArray
+            target.writeByteArray(output)
+            targetDesc.writeText(desc)
+            desc -> output
+          }
+
+          logger.debug(s"rendered $target")
+          val rendered = DatatypeConverter.printBase64Binary(bytes)
+          val dataUri = s"data:image/png;base64,$rendered"
+          val attrs = new util.HashMap[String, String]()
+          attrs.put("src", dataUri)
+          attrs.put("title", description)
+
+          writer.line()
+          writer.tag("img", attrs, true)
+          writer.line()
         }
 
-        val rendered = DatatypeConverter.printBase64Binary(bytes)
-        val dataUri = s"data:image/png;base64,$rendered"
-        val attrs = new util.HashMap[String, String]()
-        attrs.put("src", dataUri)
-        attrs.put("title", description)
-
-        writer.line()
-        writer.tag("img", attrs, true)
-        writer.line()
+        logger.debug(s"waiting for $target")
+        Try(Await.result(rendering, 3.seconds)) match {
+          case Success(_) => logger.debug(s"rendered: $target")
+          case Failure(ex) =>
+            logger.warn(s"Failed rendering $target", ex)
+            default.render(fcb)
+        }
       case other => default.render(other)
     }
   }
