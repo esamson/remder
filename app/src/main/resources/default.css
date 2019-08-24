@@ -159,6 +159,8 @@ pre code::after {
 img {
     box-sizing: content-box;
     border-style: none;
+    max-width: 100%;
+    height: auto;
 }
 
 a {
