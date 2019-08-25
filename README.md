@@ -15,7 +15,7 @@ to add the **remder-app** launcher to your `$PATH`. For example (assuming
 `~/.local/bin` is in your `$PATH`):
 
 ```
-$ coursier bootstrap ph.samson.remder:remder-app_2.12:0.0.7 -o ~/.local/bin/remder-app
+$ coursier bootstrap ph.samson.remder:remder-app_2.12:0.0.12 -o ~/.local/bin/remder-app
 ```
 
 Check out [Maven Central](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22ph.samson.remder%22%20AND%20a%3A%22remder-app_2.12%22)
