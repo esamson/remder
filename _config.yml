@@ -6,6 +6,6 @@ docs: true
 collections:
   tut:
     output: true
-version: 0.0.12
+version: 0.0.13
 org: ph.samson.remder
 markdown: kramdown
