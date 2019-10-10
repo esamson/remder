@@ -7,16 +7,15 @@ import java.util.jar.Attributes.Name.{
 }
 import java.util.jar.Manifest
 
-import resource._
-
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
+import scala.util.Using
 
 object Version {
 
   private val cl = getClass.getClassLoader
 
   private def read(url: URL) = {
-    managed(url.openStream()).acquireAndGet(stream => new Manifest(stream))
+    Using.resource(url.openStream())(stream => new Manifest(stream))
   }
 
   val Version = {

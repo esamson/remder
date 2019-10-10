@@ -21,11 +21,21 @@ object Dependencies {
 
   val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2019.9"
 
-  val scalaArm = "com.jsuereth" %% "scala-arm" % "2.0"
-
-  val scalaFx = "org.scalafx" %% "scalafx" % "8.0.192-R14"
+  val scalaFx = "org.scalafx" %% "scalafx" % "12.0.2-R18"
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8"
+
+  // Determine OS version of JavaFX binaries
+  lazy val osName = System.getProperty("os.name") match {
+    case n if n.startsWith("Linux")   => "linux"
+    case n if n.startsWith("Mac")     => "mac"
+    case n if n.startsWith("Windows") => "win"
+    case _                            => throw new Exception("Unknown platform!")
+  }
+
+  // Add JavaFX dependencies
+  lazy val javaFXModules =
+    Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
 
   val appDeps = Def.setting(
     Seq(
@@ -36,10 +46,11 @@ object Dependencies {
       commonmarkExtGfmTables,
       logbackClassic,
       plantuml,
-      scalaArm,
       scalaFx,
       scalaLogging,
       scalaTest % Test
+    ) ++ javaFXModules.map(
+      m => "org.openjfx" % s"javafx-$m" % "12.0.2" classifier osName
     )
   )
 
