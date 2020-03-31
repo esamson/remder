@@ -4,7 +4,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // Global settings
 organization in ThisBuild := "ph.samson.remder"
-scalaVersion in ThisBuild := "2.12.8"
+scalaVersion in ThisBuild := "2.12.11"
 
 licenses in ThisBuild := Seq(
   "MIT" -> url("http://opensource.org/licenses/mit-license.php"))
@@ -44,6 +44,7 @@ lazy val app = subproject("remder-app", file("app"))
     javaOptions in run ++= devRunOpts,
     javaOptions in reStart ++= devRunOpts
   )
+  .enablePlugins(JavaAppPackaging)
 
 lazy val devRunOpts = Seq(
   "-DREMDER_LOG=debug"
@@ -194,3 +195,5 @@ lazy val baseSettings = Seq(
     "-Xlint:-serial"
   )
 )
+
+addCommandAlias("makeZip", "show universal:packageBin")

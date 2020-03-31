@@ -7,7 +7,6 @@ import java.util
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import better.files.File
 import com.typesafe.scalalogging.StrictLogging
-import javax.xml.bind.DatatypeConverter
 import net.sourceforge.plantuml.SourceStringReader
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.{FencedCodeBlock, Node}
@@ -129,7 +128,7 @@ object Renderer {
           }
 
           logger.debug(s"rendered $target")
-          val rendered = DatatypeConverter.printBase64Binary(bytes)
+          val rendered = java.util.Base64.getEncoder.encodeToString(bytes)
           val dataUri = s"data:image/png;base64,$rendered"
           val attrs = new util.HashMap[String, String]()
           attrs.put("src", dataUri)
