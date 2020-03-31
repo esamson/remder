@@ -34,8 +34,8 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
     .build()
   private val renderer = HtmlRenderer
     .builder()
-    .nodeRendererFactory(
-      (context: HtmlNodeRendererContext) => new PlantUmlRenderer(context)
+    .nodeRendererFactory((context: HtmlNodeRendererContext) =>
+      new PlantUmlRenderer(context)
     )
     .extensions(extensions)
     .build()
@@ -118,8 +118,9 @@ object Renderer {
             logger.debug(s"rendering $target")
             val os = new ByteArrayOutputStream()
             val desc =
-              new SourceStringReader(s"@start$nodeType\n$source\n@end$nodeType")
-                .outputImage(os)
+              new SourceStringReader(
+                s"@${start(nodeType)}\n$source\n@${end(nodeType)}"
+              ).outputImage(os)
                 .getDescription
             val output = os.toByteArray
             target.writeByteArray(output)
@@ -153,6 +154,16 @@ object Renderer {
   }
 
   object PlantUmlRenderer {
-    val NodeTypes = Set("uml", "salt", "ditaa", "dot", "jcckit")
+    val NodeTypes = Set("plantuml", "uml", "salt", "ditaa", "dot", "jcckit")
+
+    def start(nodeType: String) = nodeType match {
+      case "plantuml" => "startuml"
+      case other      => s"start$other"
+    }
+
+    def end(nodeType: String) = nodeType match {
+      case "plantuml" => "enduml"
+      case other      => s"end$other"
+    }
   }
 }
