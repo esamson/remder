@@ -50,7 +50,7 @@ object Dependencies {
       scalaLogging,
       scalaTest % Test
     ) ++ javaFXModules.map(
-      m => "org.openjfx" % s"javafx-$m" % "12.0.2" classifier osName
+      m => "org.openjfx" % s"javafx-$m" % "13" classifier osName
     )
   )
 
