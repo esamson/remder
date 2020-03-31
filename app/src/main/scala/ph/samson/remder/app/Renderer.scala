@@ -7,7 +7,6 @@ import java.util
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import better.files.File
 import com.typesafe.scalalogging.StrictLogging
-import javax.xml.bind.DatatypeConverter
 import net.sourceforge.plantuml.SourceStringReader
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.node.{FencedCodeBlock, Node}
@@ -35,8 +34,8 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
     .build()
   private val renderer = HtmlRenderer
     .builder()
-    .nodeRendererFactory(
-      (context: HtmlNodeRendererContext) => new PlantUmlRenderer(context)
+    .nodeRendererFactory((context: HtmlNodeRendererContext) =>
+      new PlantUmlRenderer(context)
     )
     .extensions(extensions)
     .build()
@@ -119,8 +118,9 @@ object Renderer {
             logger.debug(s"rendering $target")
             val os = new ByteArrayOutputStream()
             val desc =
-              new SourceStringReader(s"@start$nodeType\n$source\n@end$nodeType")
-                .outputImage(os)
+              new SourceStringReader(
+                s"@${start(nodeType)}\n$source\n@${end(nodeType)}"
+              ).outputImage(os)
                 .getDescription
             val output = os.toByteArray
             target.writeByteArray(output)
@@ -129,7 +129,7 @@ object Renderer {
           }
 
           logger.debug(s"rendered $target")
-          val rendered = DatatypeConverter.printBase64Binary(bytes)
+          val rendered = java.util.Base64.getEncoder.encodeToString(bytes)
           val dataUri = s"data:image/png;base64,$rendered"
           val attrs = new util.HashMap[String, String]()
           attrs.put("src", dataUri)
@@ -154,6 +154,16 @@ object Renderer {
   }
 
   object PlantUmlRenderer {
-    val NodeTypes = Set("uml", "salt", "ditaa", "dot", "jcckit")
+    val NodeTypes = Set("plantuml", "uml", "salt", "ditaa", "dot", "jcckit")
+
+    def start(nodeType: String) = nodeType match {
+      case "plantuml" => "startuml"
+      case other      => s"start$other"
+    }
+
+    def end(nodeType: String) = nodeType match {
+      case "plantuml" => "enduml"
+      case other      => s"end$other"
+    }
   }
 }
