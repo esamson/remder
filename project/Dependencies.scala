@@ -23,7 +23,7 @@ object Dependencies {
 
   val scalaArm = "com.jsuereth" %% "scala-arm" % "2.0"
 
-  val javafxWeb = "org.openjfx" % "javafx-web" % "12"
+  val javafxWeb = "org.openjfx" % "javafx-web" % "12.0.2"
   val scalaFx = "org.scalafx" %% "scalafx" % "12.0.2-R18"
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8"
