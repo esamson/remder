@@ -120,8 +120,7 @@ object Renderer {
             val desc =
               new SourceStringReader(
                 s"@${start(nodeType)}\n$source\n@${end(nodeType)}"
-              ).outputImage(os)
-                .getDescription
+              ).outputImage(os).getDescription
             val output = os.toByteArray
             target.writeByteArray(output)
             targetDesc.writeText(desc)

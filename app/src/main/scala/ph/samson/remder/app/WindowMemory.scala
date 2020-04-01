@@ -11,10 +11,9 @@ import java.util.prefs.Preferences
 
 import better.files.File
 import com.typesafe.scalalogging.StrictLogging
-import resource._
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success, Try, Using}
 
 /**
   * Remember last window coordinates and dimensions for next time.
@@ -28,26 +27,29 @@ object WindowMemory extends StrictLogging {
   def fileKey(markdownFile: File): String =
     markdownFile.path.toAbsolutePath.toString.hashCode.toString
 
-  def save(markdownFile: File,
-           x: Double,
-           y: Double,
-           width: Double,
-           height: Double,
-           xScroll: Int,
-           yScroll: Int): Unit = {
+  def save(
+      markdownFile: File,
+      x: Double,
+      y: Double,
+      width: Double,
+      height: Double,
+      xScroll: Int,
+      yScroll: Int
+  ): Unit = {
+    val window = Window(x, y, width, height, xScroll, yScroll, Instant.now())
 
-    val serialize = for {
-      buffer <- managed(new ByteArrayOutputStream())
-      out <- managed(new ObjectOutputStream(buffer))
-    } yield {
-      out.writeObject(
-        Window(x, y, width, height, xScroll, yScroll, Instant.now()))
+    val serialize = Using.Manager { use =>
+      val buffer = use(new ByteArrayOutputStream())
+      val out = use(new ObjectOutputStream(buffer))
+
+      logger.debug(s"saving: $window")
+      out.writeObject(window)
       out.flush()
       buffer.toByteArray
     }
 
     val puts = for {
-      bytes <- serialize.map(identity).tried
+      bytes <- serialize
     } yield {
       // save window memory for this file
       prefs.putByteArray(fileKey(markdownFile), bytes)
@@ -56,6 +58,7 @@ object WindowMemory extends StrictLogging {
       prefs.putByteArray(DefaultKey, bytes)
 
       prefs.flush()
+      window
     }
 
     logger.debug(s"save: $puts")
@@ -78,11 +81,14 @@ object WindowMemory extends StrictLogging {
 
     savedBytes.flatMap(bytes =>
       Window(bytes) match {
-        case Success(w) => Some(w)
+        case Success(w) =>
+          logger.debug(s"loaded $w")
+          Some(w)
         case Failure(ex) =>
           logger.debug(s"load failed", ex)
           None
-    })
+      }
+    )
   }
 
   /**
@@ -132,10 +138,9 @@ object WindowMemory extends StrictLogging {
 
   object Window {
     def apply(bytes: Array[Byte]): Try[Window] = {
-      val read = for {
-        buffer <- managed(new ByteArrayInputStream(bytes))
-        in <- managed(new ObjectInputStream(buffer))
-      } yield {
+      val read = Using.Manager { use =>
+        val buffer = use(new ByteArrayInputStream(bytes))
+        val in = use(new ObjectInputStream(buffer))
         in.readObject()
       }
 
@@ -144,9 +149,9 @@ object WindowMemory extends StrictLogging {
           case w: Window => w
           case other =>
             throw new IllegalArgumentException(
-              s"Can't deserialize to Window $other")
+              s"Can't deserialize to Window $other"
+            )
         })
-        .tried
     }
   }
 
