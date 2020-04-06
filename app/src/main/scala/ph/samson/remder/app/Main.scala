@@ -30,6 +30,7 @@ import scalafx.stage.Screen
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
+import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
 object Main extends JFXApp with Uplink with StrictLogging {
@@ -136,8 +137,14 @@ object Main extends JFXApp with Uplink with StrictLogging {
 
   for (window <- WindowMemory.load(markdownFile)) {
     logger.debug(s"loaded $window")
-    // Window(40.0,23.0,0.0,22.0,0,0,2019-08-16T02:42:20.341Z)
-    val bounds = Screen.primary.visualBounds
+    val screen: Screen = Screen
+      .screensForRectangle(window.x, window.y, window.width, window.height)
+      .asScala
+      .headOption
+      .map(new Screen(_))
+      .getOrElse(Screen.primary)
+
+    val bounds = screen.visualBounds
     logger.debug {
       val w = Window(
         bounds.maxX,
