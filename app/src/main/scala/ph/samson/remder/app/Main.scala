@@ -72,22 +72,31 @@ object Main extends JFXApp with Uplink with StrictLogging {
 
   private val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
   private def requestRender() = {
-    scheduledExecutor.schedule(new Runnable {
-      override def run(): Unit = renderer ! ToViewer(markdownFile)
-    }, 100, MILLISECONDS)
+    scheduledExecutor.schedule(
+      new Runnable {
+        override def run(): Unit = renderer ! ToViewer(markdownFile)
+      },
+      100,
+      MILLISECONDS
+    )
   }
   private var sf: ScheduledFuture[_] = requestRender()
 
   if (sys.props("os.name") == "Mac OS X") {
     // WatchService is slow on macOS - use polling
     var latest = markdownFile.lastModifiedTime
-    scheduledExecutor.scheduleWithFixedDelay(() => {
-      val now = markdownFile.lastModifiedTime
-      if (now.isAfter(latest)) {
-        latest = now
-        sf = requestRender()
-      }
-    }, 400, 400, MILLISECONDS)
+    scheduledExecutor.scheduleWithFixedDelay(
+      () => {
+        val now = markdownFile.lastModifiedTime
+        if (now.isAfter(latest)) {
+          latest = now
+          sf = requestRender()
+        }
+      },
+      400,
+      400,
+      MILLISECONDS
+    )
   } else {
     val watcher = new FileMonitor(markdownFile, recursive = false) {
       override def onModify(file: File, count: Int): Unit = {

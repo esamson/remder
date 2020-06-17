@@ -109,9 +109,11 @@ object WindowMemory extends StrictLogging {
         } else {
           Window(prefs.getByteArray(key, DefaultBytes)) match {
             case Success(w) =>
-              if (ZonedDateTime
-                    .from(w.lastSave)
-                    .isBefore(GcThreshold)) {
+              if (
+                ZonedDateTime
+                  .from(w.lastSave)
+                  .isBefore(GcThreshold)
+              ) {
                 logger.debug(s"removing old $w")
                 prefs.remove(key)
               }

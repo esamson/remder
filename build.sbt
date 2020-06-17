@@ -97,10 +97,10 @@ lazy val docs = subproject("docs")
         Map(
           "technologies" ->
             s"""|
-                | - first: ["ScalaFX", "WebView and desktop GUI."]
-                | - second: ["commonmark-java", "Markdown rendering."]
-                | - third: ["PlantUML", "Diagram rendering."]
-                |""".stripMargin
+               | - first: ["ScalaFX", "WebView and desktop GUI."]
+               | - second: ["commonmark-java", "Markdown rendering."]
+               | - third: ["PlantUML", "Diagram rendering."]
+               |""".stripMargin
         )
       )
     ),
@@ -127,8 +127,8 @@ lazy val docs = subproject("docs")
         }
 
         s"""|$versionFooter
-            |$micrositesFooter
-            |""".stripMargin
+           |$micrositesFooter
+           |""".stripMargin
       }
     }
   )

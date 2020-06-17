@@ -44,15 +44,15 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
 
   private def styled(title: String, htmlBody: String) = {
     s"""|<html>
-        |  <head>
-        |    <title>$title</title>
-        |    <style>$DefaultCss</style>
-        |  </head>
-        |  <body>
-        |    $htmlBody
-        |  </body>
-        |</html>
-        |""".stripMargin
+       |  <head>
+       |    <title>$title</title>
+       |    <style>$DefaultCss</style>
+       |  </head>
+       |  <body>
+       |    $htmlBody
+       |  </body>
+       |</html>
+       |""".stripMargin
   }
 
   override def receive: Receive = {
@@ -130,68 +130,71 @@ object Renderer extends StrictLogging {
     override def getNodeTypes: util.Set[Class[_ <: Node]] =
       util.Collections.singleton(classOf[FencedCodeBlock])
 
-    override def render(node: Node): Unit = node match {
-      case fcb: FencedCodeBlock if NodeTypes.contains(fcb.getInfo) =>
-        logger.debug(s"rendering ${fcb.getInfo}")
-        val nodeType = fcb.getInfo
-        val source = fcb.getLiteral
-        val hash = source.hashCode
-        val target = OutDir / s"$hash.png"
-        val targetDesc = OutDir / s"$hash.desc"
+    override def render(node: Node): Unit =
+      node match {
+        case fcb: FencedCodeBlock if NodeTypes.contains(fcb.getInfo) =>
+          logger.debug(s"rendering ${fcb.getInfo}")
+          val nodeType = fcb.getInfo
+          val source = fcb.getLiteral
+          val hash = source.hashCode
+          val target = OutDir / s"$hash.png"
+          val targetDesc = OutDir / s"$hash.desc"
 
-        val rendering = Future {
-          val (description, bytes) = if (target.isReadable) {
-            logger.debug(s"reusing $target")
-            targetDesc.contentAsString -> target.byteArray
-          } else {
-            logger.debug(s"rendering $target")
-            val os = new ByteArrayOutputStream()
-            val desc =
-              new SourceStringReader(
-                s"@${start(nodeType)}\n$source\n@${end(nodeType)}"
-              ).outputImage(os).getDescription
-            val output = os.toByteArray
-            target.writeByteArray(output)
-            targetDesc.writeText(desc)
-            desc -> output
+          val rendering = Future {
+            val (description, bytes) = if (target.isReadable) {
+              logger.debug(s"reusing $target")
+              targetDesc.contentAsString -> target.byteArray
+            } else {
+              logger.debug(s"rendering $target")
+              val os = new ByteArrayOutputStream()
+              val desc =
+                new SourceStringReader(
+                  s"@${start(nodeType)}\n$source\n@${end(nodeType)}"
+                ).outputImage(os).getDescription
+              val output = os.toByteArray
+              target.writeByteArray(output)
+              targetDesc.writeText(desc)
+              desc -> output
+            }
+
+            logger.debug(s"rendered $target")
+            val rendered = java.util.Base64.getEncoder.encodeToString(bytes)
+            val dataUri = s"data:image/png;base64,$rendered"
+            val attrs = new util.HashMap[String, String]()
+            attrs.put("src", dataUri)
+            attrs.put("title", description)
+
+            writer.line()
+            writer.tag("img", attrs, true)
+            writer.line()
           }
 
-          logger.debug(s"rendered $target")
-          val rendered = java.util.Base64.getEncoder.encodeToString(bytes)
-          val dataUri = s"data:image/png;base64,$rendered"
-          val attrs = new util.HashMap[String, String]()
-          attrs.put("src", dataUri)
-          attrs.put("title", description)
-
-          writer.line()
-          writer.tag("img", attrs, true)
-          writer.line()
-        }
-
-        logger.debug(s"waiting for $target")
-        try {
-          Await.result(rendering, 3.seconds)
-          logger.debug(s"rendered: $target")
-        } catch {
-          case ex: Throwable =>
-            logger.warn(s"Failed rendering $target", ex)
-            default.render(fcb)
-        }
-      case other => default.render(other)
-    }
+          logger.debug(s"waiting for $target")
+          try {
+            Await.result(rendering, 3.seconds)
+            logger.debug(s"rendered: $target")
+          } catch {
+            case ex: Throwable =>
+              logger.warn(s"Failed rendering $target", ex)
+              default.render(fcb)
+          }
+        case other => default.render(other)
+      }
   }
 
   object PlantUmlRenderer {
     val NodeTypes = Set("plantuml", "uml", "salt", "ditaa", "dot", "jcckit")
 
-    def start(nodeType: String) = nodeType match {
-      case "plantuml" => "startuml"
-      case other      => s"start$other"
-    }
+    def start(nodeType: String) =
+      nodeType match {
+        case "plantuml" => "startuml"
+        case other      => s"start$other"
+      }
 
-    def end(nodeType: String) = nodeType match {
-      case "plantuml" => "enduml"
-      case other      => s"end$other"
-    }
+    def end(nodeType: String) =
+      nodeType match {
+        case "plantuml" => "enduml"
+        case other      => s"end$other"
+      }
   }
 }
