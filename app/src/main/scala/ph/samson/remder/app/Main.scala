@@ -127,6 +127,7 @@ object Main extends JFXApp with Uplink with StrictLogging {
     filterEvent(KeyEvent.KeyTyped) { (ke: KeyEvent) =>
       if (ke.character == "b") {
         ke.consume()
+        logger.debug("rendering to browser")
         renderer ! ToBrowser(markdownFile)
       }
     }

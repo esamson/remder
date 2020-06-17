@@ -23,6 +23,8 @@ import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
+import scala.sys.process.Process
+import scala.util.{Failure, Success, Try}
 
 class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
   import Renderer._
@@ -65,6 +67,7 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
       val content = markdown.contentAsString
       val hash = content.hashCode
       val target = OutDir / s"remder-$hash.html"
+      log.debug("rendering: {}", target)
       if (target.notExists) {
         target.writeText(
           styled(
@@ -73,11 +76,11 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
           )
         )
       }
-      Desktop.getDesktop.browse(target.uri)
+      launchBrowser(target)
   }
 }
 
-object Renderer {
+object Renderer extends StrictLogging {
   val OutDir: File =
     sys.env.get("REMDER_OUTDIR").map(File(_)).getOrElse(File.temp)
 
@@ -87,6 +90,32 @@ object Renderer {
   case class ToBrowser(markdown: File)
 
   def props(presenter: ActorRef): Props = Props(new Renderer(presenter))
+
+  val BrowserLaunchers: List[File => Try[Unit]] =
+    List(
+      file => Try(Desktop.getDesktop.browse(file.uri)),
+      file => Try(Process(s"xdg-open ${file.uri}").!)
+    )
+
+  def launchBrowser(
+      file: File,
+      launchers: List[File => Try[Unit]] = BrowserLaunchers,
+      failures: List[Throwable] = Nil
+  ): Unit = {
+    launchers match {
+      case launcher :: rest =>
+        launcher(file) match {
+          case Success(value) => value
+          case Failure(exception) =>
+            launchBrowser(file, rest, failures :+ exception)
+        }
+      case Nil =>
+        Console.err.println("Failed to launch browser")
+        for (e <- failures) {
+          logger.debug("launch brower failed", e)
+        }
+    }
+  }
 
   class PlantUmlRenderer(context: HtmlNodeRendererContext)
       extends NodeRenderer
