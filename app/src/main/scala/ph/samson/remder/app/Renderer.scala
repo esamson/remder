@@ -44,15 +44,15 @@ class Renderer(presenter: ActorRef) extends Actor with ActorLogging {
 
   private def styled(title: String, htmlBody: String) = {
     s"""|<html>
-       |  <head>
-       |    <title>$title</title>
-       |    <style>$DefaultCss</style>
-       |  </head>
-       |  <body>
-       |    $htmlBody
-       |  </body>
-       |</html>
-       |""".stripMargin
+        |  <head>
+        |    <title>$title</title>
+        |    <style>$DefaultCss</style>
+        |  </head>
+        |  <body>
+        |    $htmlBody
+        |  </body>
+        |</html>
+        |""".stripMargin
   }
 
   override def receive: Receive = {
