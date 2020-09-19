@@ -19,10 +19,10 @@ import org.commonmark.renderer.html.{
 }
 import ph.samson.remder.app.Presenter.Present
 
-import scala.collection.JavaConverters._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
+import scala.jdk.CollectionConverters._
 import scala.sys.process.Process
 import scala.util.{Failure, Success, Try}
 
