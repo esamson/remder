@@ -94,7 +94,12 @@ object Renderer extends StrictLogging {
   val BrowserLaunchers: List[File => Try[Unit]] =
     List(
       file => Try(Desktop.getDesktop.browse(file.uri)),
-      file => Try(Process(s"xdg-open ${file.uri}").!)
+      file =>
+        Try(Process(s"xdg-open ${file.uri}").!).flatMap {
+          case 0 => Success(())
+          case err =>
+            Failure(new RuntimeException(s"xdg-open exited with $err"))
+        }
     )
 
   def launchBrowser(
