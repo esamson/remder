@@ -1,7 +1,6 @@
 package ph.samson.remder.coupling
 
-/**
-  * Interface from probe to app.
+/** Interface from probe to app.
   */
 trait Uplink {
   def debug(msg: String): Unit

@@ -15,8 +15,7 @@ import com.typesafe.scalalogging.StrictLogging
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try, Using}
 
-/**
-  * Remember last window coordinates and dimensions for next time.
+/** Remember last window coordinates and dimensions for next time.
   */
 object WindowMemory extends StrictLogging {
 
@@ -91,8 +90,7 @@ object WindowMemory extends StrictLogging {
     )
   }
 
-  /**
-    * Asynchronously clean up window memory
+  /** Asynchronously clean up window memory
     */
   def gc(): Unit = {
     import scala.concurrent.ExecutionContext.Implicits.global
