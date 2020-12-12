@@ -4,7 +4,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // Global settings
 organization in ThisBuild := "ph.samson.remder"
-scalaVersion in ThisBuild := "2.13.1"
+scalaVersion in ThisBuild := "2.13.4"
 
 licenses in ThisBuild := Seq(
   "MIT" -> url("http://opensource.org/licenses/mit-license.php")
