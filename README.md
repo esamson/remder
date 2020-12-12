@@ -8,8 +8,6 @@ Renders a live HTML view of a Markdown file. Bring your own editor.
 
 ## Install
 
-*Tested on [Oracle Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html).*
-
 Use [Coursier](https://github.com/coursier/coursier#generating-bootstrap-launchers)
 to add the **remder-app** launcher to your `$PATH`. For example (assuming
 `~/.local/bin` is in your `$PATH`):

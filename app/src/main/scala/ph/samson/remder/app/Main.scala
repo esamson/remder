@@ -1,10 +1,5 @@
 package ph.samson.remder.app
 
-import java.awt.Desktop
-import java.time.Instant
-import java.util.concurrent.TimeUnit.MILLISECONDS
-import java.util.concurrent.{Executors, ScheduledFuture}
-
 import akka.actor.ActorSystem
 import better.files.{File, FileMonitor}
 import com.typesafe.scalalogging.{Logger, StrictLogging}
@@ -28,9 +23,12 @@ import scalafx.scene.paint.Color.Black
 import scalafx.scene.web.WebView
 import scalafx.stage.Screen
 
+import java.awt.Desktop
+import java.time.Instant
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.util.concurrent.{Executors, ScheduledFuture}
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
-import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
 object Main extends JFXApp with Uplink with StrictLogging {
@@ -149,7 +147,6 @@ object Main extends JFXApp with Uplink with StrictLogging {
     logger.debug(s"loaded $window")
     val screen: Screen = Screen
       .screensForRectangle(window.x, window.y, window.width, window.height)
-      .asScala
       .headOption
       .map(new Screen(_))
       .getOrElse(Screen.primary)
