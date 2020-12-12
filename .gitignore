@@ -2,6 +2,8 @@ target/
 
 .idea/
 
-/.metals/
+.metals/
+.bsp/
+metals.sbt
 
 *.asc
