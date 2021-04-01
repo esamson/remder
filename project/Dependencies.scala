@@ -26,7 +26,7 @@ object Dependencies {
   val javafxWeb = "org.openjfx" % "javafx-web" % "14.0.2.1"
   val scalaFx = "org.scalafx" %% "scalafx" % "15.0.1-R21"
 
-  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.6"
+  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.7"
 
   val appDeps = Def.setting(
     Seq(
