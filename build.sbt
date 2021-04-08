@@ -3,14 +3,14 @@ import microsites._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // Global settings
-organization in ThisBuild := "ph.samson.remder"
-scalaVersion in ThisBuild := "2.13.5"
+ThisBuild / organization := "ph.samson.remder"
+ThisBuild / scalaVersion := "2.13.5"
 
 licenses in ThisBuild := Seq(
   "MIT" -> url("http://opensource.org/licenses/mit-license.php")
 )
-homepage in ThisBuild := Some(url("https://github.com/esamson/remder"))
-developers in ThisBuild := List(
+ThisBuild / homepage := Some(url("https://github.com/esamson/remder"))
+ThisBuild / developers := List(
   Developer(
     id = "esamson",
     name = "Edward Samson",
@@ -18,14 +18,14 @@ developers in ThisBuild := List(
     url = url("https://edward.samson.ph")
   )
 )
-scmInfo in ThisBuild := Some(
+ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/esamson/remder"),
     "scm:git:git@github.com:esamson/remder.git"
   )
 )
 
-releaseEarlyWith in Global := SonatypePublisher
+Global / releaseEarlyWith := SonatypePublisher
 
 // Root project
 name := "remder"
