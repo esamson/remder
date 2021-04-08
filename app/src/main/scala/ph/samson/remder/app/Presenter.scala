@@ -29,6 +29,8 @@ class Presenter(engine: WebEngine, uplink: Uplink)
                 new DownlinkSender(downlink).scroll(x, y)
               case other => log.error(s"no downlink $other")
             }
+          case other =>
+            throw new AssertionError(s"Expected window but got $other")
         }
       }
   }
