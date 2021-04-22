@@ -24,7 +24,7 @@ object Dependencies {
   val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2021.4"
 
   val javafxWeb = "org.openjfx" % "javafx-web" % "16"
-  val scalaFx = "org.scalafx" %% "scalafx" % "15.0.1-R21"
+  val scalaFx = "org.scalafx" %% "scalafx" % "16.0.0-R22"
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.2.8"
 
