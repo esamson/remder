@@ -13,10 +13,10 @@ object Dependencies {
   val betterFiles =
     "com.github.pathikrit" %% "better-files" % betterFilesVersion
 
-  val commonmarkVersion = "0.17.0"
-  val commonmark = "com.atlassian.commonmark" % "commonmark" % commonmarkVersion
+  val commonmarkVersion = "0.18.0"
+  val commonmark = "org.commonmark" % "commonmark" % commonmarkVersion
   val commonmarkExtGfmTables =
-    "com.atlassian.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
+    "org.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
 
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4"
