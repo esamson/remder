@@ -1,6 +1,6 @@
 addSbtPlugin("ch.epfl.scala" % "sbt-release-early" % "2.1.1")
 addSbtPlugin("com.47deg" % "sbt-microsites" % "1.3.4")
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.0")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.5")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.1.0")
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.7.1")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.3")
