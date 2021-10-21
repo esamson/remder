@@ -46,7 +46,7 @@ object Dependencies {
 
   val probeDeps = Def.setting(
     Seq[ModuleID](
-      "org.scala-js" %%% "scalajs-dom" % "1.2.0"
+      "org.scala-js" %%% "scalajs-dom" % "2.0.0"
     )
   )
 
