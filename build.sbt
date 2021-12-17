@@ -1,12 +1,11 @@
 import Dependencies._
-import microsites._
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 // Global settings
 ThisBuild / organization := "ph.samson.remder"
 ThisBuild / scalaVersion := "2.13.7"
 
-licenses in ThisBuild := Seq(
+ThisBuild / licenses := Seq(
   "MIT" -> url("http://opensource.org/licenses/mit-license.php")
 )
 ThisBuild / homepage := Some(url("https://github.com/esamson/remder"))
@@ -25,14 +24,8 @@ ThisBuild / scmInfo := Some(
   )
 )
 
-Global / releaseEarlyWith := SonatypePublisher
-
 // Root project
 name := "remder"
-pgpPublicRing := file("./travis/pubring.asc")
-pgpSecretRing := file("./travis/secring.asc")
-sonatypeProfileName := "ph.samson"
-aggregate in releaseEarly := false
 publish / skip := true
 
 lazy val app = subproject("remder-app", file("app"))
@@ -40,10 +33,9 @@ lazy val app = subproject("remder-app", file("app"))
   .settings(
     libraryDependencies ++= appDeps.value,
     crossLibs(Compile),
-    resources in Compile += (fullOptJS in probe in Compile).value.data,
-    fork in run := true,
-    javaOptions in run ++= devRunOpts,
-    javaOptions in reStart ++= devRunOpts
+    Compile / resources  += (probe / Compile / fullOptJS).value.data,
+    run / fork := true,
+    run / javaOptions ++= devRunOpts
   )
   .enablePlugins(JavaAppPackaging)
 
@@ -74,63 +66,6 @@ lazy val coupling = crossProject(JVMPlatform, JSPlatform)
 
 lazy val jvmCoupling = coupling.jvm
 lazy val jsCoupling = coupling.js
-
-lazy val docs = subproject("docs")
-  .enablePlugins(MicrositesPlugin)
-  .settings(
-    micrositeName := "Remder",
-    micrositeDescription := "Remder: markdown rendered live",
-    micrositeBaseUrl := "/remder",
-    micrositeAuthor := "Edward Samson",
-    micrositeHomepage := "https://esamson.github.io/remder/",
-    micrositeOrganizationHomepage := "https://edward.samson.ph/",
-    micrositeGithubOwner := "esamson",
-    micrositeGithubRepo := "remder",
-    micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-    micrositePushSiteWith := GitHub4s,
-    micrositeAnalyticsToken := sys.env.getOrElse("ANALYTICS_TOKEN", ""),
-    micrositeExtraMdFiles := Map(
-      file("README.md") -> ExtraMdFileConfig(
-        "index.md",
-        "home",
-        Map(
-          "technologies" ->
-            s"""|
-                | - first: ["ScalaFX", "WebView and desktop GUI."]
-                | - second: ["commonmark-java", "Markdown rendering."]
-                | - third: ["PlantUML", "Diagram rendering."]
-                |""".stripMargin
-        )
-      )
-    ),
-    micrositeFooterText := {
-      for {
-        gitDescribe <- dynverGitDescribeOutput.value
-        default <- micrositeFooterText.value
-      } yield {
-        val versionLink = if (gitDescribe.isDirty()) {
-          "https://github.com/esamson/remder/commits/master"
-        } else if (gitDescribe.isSnapshot()) {
-          s"https://github.com/esamson/remder/commit/${gitDescribe.commitSuffix.sha}"
-        } else {
-          s"https://github.com/esamson/remder/releases/tag/v${version.value}"
-        }
-
-        val versionFooter =
-          s"""<p><a href="$versionLink">Remder ${version.value}</a></p>"""
-
-        val micrositesFooter = if (default.startsWith("<p>")) {
-          default.replace("<p>", """<p style="font-size: 50%">""")
-        } else {
-          default
-        }
-
-        s"""|$versionFooter
-            |$micrositesFooter
-            |""".stripMargin
-      }
-    }
-  )
 
 def subproject(name: String, dir: File): Project =
   Project(name, dir).settings(baseSettings)
