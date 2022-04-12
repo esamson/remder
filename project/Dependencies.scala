@@ -24,7 +24,7 @@ object Dependencies {
   val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2022.4"
 
   // Don't upgrade until https://github.com/sbt/sbt/issues/6564 is fixed
-  val javafxWeb = "org.openjfx" % "javafx-web" % "17-ea+8"
+  val javafxWeb = "org.openjfx" % "javafx-web" % "19-ea+5"
 
   val scalaFx = "org.scalafx" %% "scalafx" % "17.0.1-R26"
 
