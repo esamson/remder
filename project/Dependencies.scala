@@ -21,7 +21,7 @@ object Dependencies {
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
 
-  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2022.5"
+  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2022.6"
 
   // Don't upgrade until https://github.com/sbt/sbt/issues/6564 is fixed
   val javafxWeb = "org.openjfx" % "javafx-web" % "17-ea+8"
