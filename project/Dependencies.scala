@@ -26,7 +26,7 @@ object Dependencies {
   // Don't upgrade until https://github.com/sbt/sbt/issues/6564 is fixed
   val javafxWeb = "org.openjfx" % "javafx-web" % "17-ea+8"
 
-  val scalaFx = "org.scalafx" %% "scalafx" % "18.0.1-R27"
+  val scalaFx = "org.scalafx" %% "scalafx" % "18.0.1-R28"
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.2.12"
 
