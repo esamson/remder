@@ -25,7 +25,7 @@ object Dependencies {
 
   val javafxWeb = "org.openjfx" % "javafx-web" % "20-ea+2"
 
-  val scalaFx = "org.scalafx" %% "scalafx" % "18.0.2-R29"
+  val scalaFx = "org.scalafx" %% "scalafx" % "19.0.0-R30"
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.2.13"
 
