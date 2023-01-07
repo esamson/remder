@@ -27,7 +27,7 @@ object Dependencies {
 
   val scalaFx = "org.scalafx" %% "scalafx" % "19.0.0-R30"
 
-  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.14"
+  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.15"
 
   val appDeps = Def.setting(
     Seq(
