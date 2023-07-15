@@ -5,6 +5,7 @@ import better.files.{File, FileMonitor}
 import com.typesafe.scalalogging.{Logger, StrictLogging}
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.concurrent.Worker
+import javafx.event.{Event, EventHandler, EventType}
 import javafx.scene.web.WebErrorEvent
 import javafx.scene.web.WebErrorEvent.USER_DATA_DIRECTORY_ALREADY_IN_USE
 import javafx.stage.WindowEvent
@@ -86,6 +87,7 @@ object Main extends JFXApp3 with Uplink with StrictLogging {
     val renderer = system.actorOf(Renderer.props(presenter))
 
     val scheduledExecutor = Executors.newSingleThreadScheduledExecutor()
+
     def requestRender() = {
       scheduledExecutor.schedule(
         new Runnable {
@@ -95,6 +97,7 @@ object Main extends JFXApp3 with Uplink with StrictLogging {
         MILLISECONDS
       )
     }
+
     var sf: ScheduledFuture[_] = requestRender()
 
     if (sys.props("os.name") == "Mac OS X") {
@@ -158,6 +161,26 @@ object Main extends JFXApp3 with Uplink with StrictLogging {
           renderer ! ToBrowser(markdownFile)
         }
       }
+
+      override def addEventHandler[E <: Event](
+          eventType: EventType[E],
+          eventHandler: EventHandler[_ >: E]
+      ): Unit = delegate.addEventHandler(eventType, eventHandler)
+
+      override def removeEventHandler[E <: Event](
+          eventType: EventType[E],
+          eventHandler: EventHandler[_ >: E]
+      ): Unit = delegate.removeEventHandler(eventType, eventHandler)
+
+      override def addEventFilter[E <: Event](
+          eventType: EventType[E],
+          eventHandler: EventHandler[_ >: E]
+      ): Unit = delegate.addEventFilter(eventType, eventHandler)
+
+      override def removeEventFilter[E <: Event](
+          eventType: EventType[E],
+          eventHandler: EventHandler[_ >: E]
+      ): Unit = delegate.removeEventFilter(eventType, eventHandler)
     }
 
     for (window <- WindowMemory.load(markdownFile)) {
