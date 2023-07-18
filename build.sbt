@@ -33,7 +33,7 @@ lazy val app = subproject("remder-app", file("app"))
   .settings(
     libraryDependencies ++= appDeps.value,
     crossLibs(Compile),
-    Compile / resources  += (probe / Compile / fullOptJS).value.data,
+    Compile / resources += (probe / Compile / fullOptJS).value.data,
     run / fork := true,
     run / javaOptions ++= devRunOpts
   )
