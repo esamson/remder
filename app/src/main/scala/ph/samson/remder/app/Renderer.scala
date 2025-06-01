@@ -96,7 +96,7 @@ object Renderer extends StrictLogging {
       file => Try(Desktop.getDesktop.browse(file.uri)),
       file =>
         Try(Process(s"xdg-open ${file.uri}").!).flatMap {
-          case 0 => Success(())
+          case 0   => Success(())
           case err =>
             Failure(new RuntimeException(s"xdg-open exited with $err"))
         }
@@ -110,7 +110,7 @@ object Renderer extends StrictLogging {
     launchers match {
       case launcher :: rest =>
         launcher(file) match {
-          case Success(value) => value
+          case Success(value)     => value
           case Failure(exception) =>
             launchBrowser(file, rest, failures :+ exception)
         }

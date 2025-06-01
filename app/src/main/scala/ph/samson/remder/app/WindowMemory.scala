@@ -147,7 +147,7 @@ object WindowMemory extends StrictLogging {
       read
         .map({
           case w: Window => w
-          case other =>
+          case other     =>
             throw new IllegalArgumentException(
               s"Can't deserialize to Window $other"
             )
