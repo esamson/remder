@@ -13,7 +13,7 @@ object Dependencies {
   val betterFiles =
     "com.github.pathikrit" %% "better-files" % betterFilesVersion
 
-  val commonmarkVersion = "0.25.1"
+  val commonmarkVersion = "0.26.0"
   val commonmark = "org.commonmark" % "commonmark" % commonmarkVersion
   val commonmarkExtGfmTables =
     "org.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
