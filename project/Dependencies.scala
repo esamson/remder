@@ -21,7 +21,7 @@ object Dependencies {
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.20"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6"
 
-  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2025.9"
+  val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2025.10"
 
   val javafxWeb = "org.openjfx" % "javafx-web" % "23.0.2"
 
