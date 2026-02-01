@@ -18,7 +18,7 @@ object Dependencies {
   val commonmarkExtGfmTables =
     "org.commonmark" % "commonmark-ext-gfm-tables" % commonmarkVersion
 
-  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.25"
+  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.27"
   val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6"
 
   val plantuml = "net.sourceforge.plantuml" % "plantuml" % "1.2026.1"
